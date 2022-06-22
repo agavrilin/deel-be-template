@@ -17,6 +17,16 @@ async function bestProfession(req, res, next) {
             });
         }
     
+        /**
+         * Can be executed with raw query:
+         * SELECT Profiles.id as profile_id, Profiles.profession, Contracts.id as contract_id, SUM(Jobs.price) as earned
+         * FROM Profiles
+         * INNER JOIN Contracts ON Profiles.id = Contracts.ContractorId
+         * INNER JOIN Jobs ON Jobs.ContractId = Contracts.id AND paymentDate >= start AND paymentDate <= end
+         * GROUP BY Profiles.profession
+         * ORDER BY earned DESC
+         * LIMIT 1
+         */
         const profession = await Profile.findOne({
             attributes: ['profession', [fn('sum', col('Contractor.Jobs.price')), 'earned']],
             where: { type: 'contractor' },
@@ -56,6 +66,16 @@ async function bestClients(req, res, next) {
             });
         }
         
+        /**
+         * Can be executed with raw query:
+         * SELECT Profiles.id as profile_id, Profiles.firstName, Profiles.lastName, Contracts.id as contract_id, SUM(Jobs.price) as paid
+         * FROM Profiles
+         * INNER JOIN Contracts ON Profiles.id = Contracts.ClientId
+         * INNER JOIN Jobs ON Jobs.ContractId = Contracts.id AND paymentDate >= start AND paymentDate <= end
+         * GROUP BY Profiles.id
+         * ORDER BY paid DESC
+         * LIMIT 2
+         */
         const clients = await Profile.findAll({
             attributes: ['id', 'firstName', 'lastName', [fn('IFNULL', fn('sum', col('Client.Jobs.price')), 0), 'paid']],
             where: { type: 'client' },

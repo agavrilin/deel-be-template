@@ -21,6 +21,9 @@ async function deposit (req, res, next) {
     }
 
     const userId = req.params.userId;
+    const sequelize = req.app.get('sequelize');
+
+    const transaction = await sequelize.transaction();
 
     try {
         const { Contract, Job, Profile } = req.app.get('models');
@@ -37,22 +40,27 @@ async function deposit (req, res, next) {
                     where: { paid: { [Op.not]: true } }
                 }
             },
-            subQuery: false
+            subQuery: false,
+            lock: transaction.LOCK.UPDATE,
+            transaction
         });
 
         const maxAmount = client.toJSON().amountToPay * 0.25;
 
         if (amount > maxAmount) {
+            await transaction.rollback();
             return res.status(400).json({
                 code: 'invalid_amount',
                 message: `you can't deposit more than ${maxAmount}`
             });
         }
 
-        await client.increment('balance', { by: amount });
+        await client.increment('balance', { by: amount, transaction });
+        await transaction.commit();
     
         return res.sendStatus(204);
     } catch(err) {
+        if (transaction) await transaction.rollback();
         next(err);
     }
 }

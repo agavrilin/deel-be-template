@@ -33,6 +33,8 @@ async function pay(req, res, next) {
 
     const jobId = req.params.id;
     
+    const sequelize = req.app.get('sequelize');
+    const transaction = await sequelize.transaction();
     try {
         const { Contract, Job, Profile } = req.app.get('models');
         const unpaidJob = await Job.findOne({
@@ -48,14 +50,18 @@ async function pay(req, res, next) {
                     model: Profile,
                     as: 'Contractor'
                 }]
-            }
+            },
+            lock: transaction.LOCK.UPDATE,
+            transaction
         });
     
         if (!unpaidJob) {
+            await transaction.rollback();
             return res.sendStatus(404);
         }
     
         if (unpaidJob.paid) {
+            await transaction.rollback();
             return res.status(400).json({
                 code: 'already_paid',
                 message: 'this job already paid'
@@ -63,20 +69,23 @@ async function pay(req, res, next) {
         }
     
         if (unpaidJob.price > unpaidJob.Contract.Client.balance) {
+            await transaction.rollback();
             return res.status(400).json({
                 code: 'insufficient_funds',
                 message: 'not enough money on your balance to pay for this job'
             });
         }
-    
-        const contractorUpdate = unpaidJob.Contract.Contractor.increment('balance', { by: unpaidJob.price });
-        const clientUpdate = unpaidJob.Contract.Client.decrement('balance', { by: unpaidJob.price });
-        const jobUpdate = unpaidJob.update({ paid: true, paymentDate: new Date() });
-    
+        
+        const contractorUpdate = unpaidJob.Contract.Contractor.increment('balance', { by: unpaidJob.price, transaction });
+        const clientUpdate = unpaidJob.Contract.Client.decrement('balance', { by: unpaidJob.price, transaction });
+        const jobUpdate = unpaidJob.update({ paid: true, paymentDate: new Date() }, { transaction });
+
         await Promise.all([jobUpdate, clientUpdate, contractorUpdate]);
-    
+
+        await transaction.commit();
         return res.sendStatus(204);    
     } catch(err) {
+        if (transaction) await transaction.rollback();
         next(err);
     }
 }
