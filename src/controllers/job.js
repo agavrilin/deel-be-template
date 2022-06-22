@@ -19,7 +19,7 @@ async function unpaid(req, res, next) {
             }
         });
     
-        return res.json(unpaidJobs);            
+        return res.json(unpaidJobs);
     } catch (err) {
         next(err);
     }
@@ -83,7 +83,7 @@ async function pay(req, res, next) {
         await Promise.all([jobUpdate, clientUpdate, contractorUpdate]);
 
         await transaction.commit();
-        return res.sendStatus(204);    
+        return res.sendStatus(204);
     } catch(err) {
         if (transaction) await transaction.rollback();
         next(err);

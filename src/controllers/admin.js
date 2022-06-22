@@ -49,7 +49,7 @@ async function bestProfession(req, res, next) {
             subQuery: false
         });
     
-        res.json(profession);    
+        res.json(profession);
     } catch (err) {
         next(err);
     }
@@ -104,5 +104,4 @@ async function bestClients(req, res, next) {
     } catch (err) {
         next(err);
     }
-
 }

@@ -18,14 +18,14 @@ async function getContractById(req, res, next) {
     
         if(!contract) return res.sendStatus(404);
     
-        return res.json(contract);        
+        return res.json(contract);
     } catch (err) {
         next(err);
     }
 }
 
 async function getContractsList(req, res, next) {
-    try {        
+    try {
         const { Contract } = req.app.get('models');
     
         const contracts = await Contract.findAll({

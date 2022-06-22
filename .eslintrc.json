@@ -15,6 +15,8 @@
         "semi": ["error", "always"],
         "object-curly-spacing": ["error", "always"],
         "comma-spacing": ["error", { "before": false, "after": true }],
-        "key-spacing": ["error", { "beforeColon": false }]
+        "key-spacing": ["error", { "beforeColon": false }],
+        "no-trailing-spaces": ["error", { "skipBlankLines": true }],
+        "eol-last": ["error", "always"]
     }
 }

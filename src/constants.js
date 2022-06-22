@@ -10,7 +10,7 @@ const JOB_STATUSES = {
 };
 
 const PROFILE_SCOPE = {
-    client: 'ClientId', 
+    client: 'ClientId',
     contractor: 'ContractorId'
 };
 
