@@ -1,0 +1,202 @@
+{
+	"info": {
+		"_postman_id": "8ecee687-a585-4ec1-b7be-20386a32f033",
+		"name": "deel-be-template",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get contract by id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "profile_id",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:3001/contracts/1",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"contracts",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get contracts list",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "profile_id",
+						"value": "3",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:3001/contracts",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"contracts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get unpaid jobs",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "profile_id",
+						"value": "2",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:3001/jobs/unpaid",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"jobs",
+						"unpaid"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get best professions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3001/admin/best-profession?start=2020-06-17&end=2022-06-18",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"admin",
+						"best-profession"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "2020-06-17"
+						},
+						{
+							"key": "end",
+							"value": "2022-06-18"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get best clients",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3001/admin/best-clients?start=2020-08-17&end=2020-08-18",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"admin",
+						"best-clients"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "2020-08-17"
+						},
+						{
+							"key": "end",
+							"value": "2020-08-18"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pay for the job",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "profile_id",
+						"value": "2",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:3001/jobs/3/pay",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"jobs",
+						"3",
+						"pay"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Increment balance",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "profile_id",
+						"value": "2",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": 100\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3001/balances/deposit/2",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"balances",
+						"deposit",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
